@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { FaCheckCircle } from 'react-icons/fa'
 import styles from '../styles/components/Countdown.module.css';
 
 let countdownTimeout: NodeJS.Timeout;
@@ -21,7 +22,7 @@ export function Countdown() {
   function resetCountdown() {
     clearTimeout(countdownTimeout);
     setIsActive(false);
-    setTime(25 * 60);
+    setTime(0.05 * 60);
   }
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export function Countdown() {
 
       {hasFinished ? (
         <button disabled className={styles.countdownButton}>
-          Ciclo encerrado
+          Ciclo encerrado <FaCheckCircle />
         </button>
       ) : (
         <>
