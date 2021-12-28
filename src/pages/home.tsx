@@ -8,47 +8,51 @@ import { GetServerSideProps } from 'next';
 import { ChallengeBox } from '../components/ChallengeBox';
 import { CountdownProvider } from '../contexts/CountdownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
+import { AuthProvider } from '../contexts/AuthContext';
 
 interface HomeProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
-  user_name: string,
-  user_image: string,
-  user_email: string,
+  user_name: string;
+  user_image: string;
+  user_email: string;
 }
 
 export default function Home(props: HomeProps) {
   return (
-    <ChallengesProvider
-      level={props.level}
-      currentExperience={props.currentExperience}
-      challengesCompleted={props.challengesCompleted}
+    <AuthProvider
       user_name={props.user_name}
-      user_image={props.user_image}
       user_email={props.user_email}
+      user_image={props.user_image}
     >
-      <div className={styles.container}>
-        <Head>
-          <title>Início | move.it</title>
-        </Head>
+      <ChallengesProvider
+        level={props.level}
+        currentExperience={props.currentExperience}
+        challengesCompleted={props.challengesCompleted}
+      >
+        <div className={styles.container}>
+          <Head>
+            <title>Início | move.it</title>
+          </Head>
 
-        <ExperienceBar />
+          <ExperienceBar />
 
-        <CountdownProvider>
-          <section>
-            <div>
-              <Profile />
-              <CompletedChallenges />
-              <Countdown />
-            </div>
-            <div>
-              <ChallengeBox />
-            </div>
-          </section>
-        </CountdownProvider>
-      </div>
-    </ChallengesProvider>
+          <CountdownProvider>
+            <section>
+              <div>
+                <Profile />
+                <CompletedChallenges />
+                <Countdown />
+              </div>
+              <div>
+                <ChallengeBox />
+              </div>
+            </section>
+          </CountdownProvider>
+        </div>
+      </ChallengesProvider>
+    </AuthProvider>
   );
 }
 

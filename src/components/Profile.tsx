@@ -1,11 +1,13 @@
 import { useSession } from 'next-auth/react';
 import { useContext } from 'react';
 import { RiSettings5Fill } from 'react-icons/ri';
+import { AuthContext } from '../contexts/AuthContext';
 import { ChallengesContext } from '../contexts/ChallengesContext';
 import styles from '../styles/components/Profile.module.scss';
 
 export function Profile() {
-  const { level, user_name, user_image, user_email } = useContext(ChallengesContext);
+  const { level } = useContext(ChallengesContext);
+  const { user_name, user_image } = useContext(AuthContext);
   return (
     <div className={styles.profileContainer}>
       <img

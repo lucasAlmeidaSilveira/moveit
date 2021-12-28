@@ -16,9 +16,6 @@ interface ChallengesContextData {
   challengesCompleted: number;
   activeChallenges: Challenge;
   experienceToNextLevel: number;
-  user_name: string;
-  user_image: string;
-  user_email: string;
   resetChallenge: () => void;
   levelUp: () => void;
   startNewChallenge: () => void;
@@ -31,9 +28,6 @@ interface ChallengesProviderProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
-  user_name: string;
-  user_image: string;
-  user_email: string;
 }
 
 export const ChallengesContext = createContext({} as ChallengesContextData);
@@ -64,23 +58,6 @@ export function ChallengesProvider({
     Cookies.set('currentExperience', String(currentExperience));
     Cookies.set('challengesCompleted', String(challengesCompleted));
   }, [level, currentExperience, challengesCompleted]);
-
-  const { data: session } = useSession();
-
-  let user_name;
-  let user_image;
-  let user_email;
-
-  if (session !== undefined) {
-    user_name = session.user.name;
-    user_image = session.user.image;
-    user_email = session.user.email;
-
-    Cookies.set('user_name', user_name);
-    Cookies.set('user_image', user_image);
-    Cookies.set('user_email', user_email);
-    console.log(session);
-  }
 
   function levelUp() {
     setLevel(level + 1);
@@ -141,9 +118,6 @@ export function ChallengesProvider({
         experienceToNextLevel,
         completeChallenges,
         closeLevelUpModal,
-        user_name,
-        user_image,
-        user_email,
       }}
     >
       {children}

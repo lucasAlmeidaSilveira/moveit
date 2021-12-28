@@ -20,7 +20,7 @@ export default function Login() {
   return (
     <main className={styles.background}>
       <Head>
-        <title>Login | move.it</title>
+        <title>Bem-vindo | move.it</title>
       </Head>
       <div className={styles.container}>
         <div className={styles.left}>
@@ -31,7 +31,7 @@ export default function Login() {
           <h2>Bem-vindo</h2>
 
           <button type='button' onClick={() => signIn('github')}>
-            <AiFillGithub /> Faça Login com o Github
+            <AiFillGithub /> Fazer Login com o Github
           </button>
         </div>
       </div>
