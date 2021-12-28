@@ -13,6 +13,9 @@ interface HomeProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
+  user_name: string,
+  user_image: string,
+  user_email: string,
 }
 
 export default function Home(props: HomeProps) {
@@ -21,6 +24,9 @@ export default function Home(props: HomeProps) {
       level={props.level}
       currentExperience={props.currentExperience}
       challengesCompleted={props.challengesCompleted}
+      user_name={props.user_name}
+      user_image={props.user_image}
+      user_email={props.user_email}
     >
       <div className={styles.container}>
         <Head>
@@ -47,12 +53,22 @@ export default function Home(props: HomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
+  const {
+    level,
+    currentExperience,
+    challengesCompleted,
+    user_name,
+    user_image,
+    user_email,
+  } = ctx.req.cookies;
   return {
     props: {
       level: Number(level),
       currentExperience: Number(currentExperience),
       challengesCompleted: Number(challengesCompleted),
+      user_name: String(user_name),
+      user_image: String(user_image),
+      user_email: String(user_email),
     },
   };
 };
