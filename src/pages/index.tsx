@@ -1,58 +1,51 @@
-import { CompletedChallenges } from '../components/CompletedChallenges';
-import { Countdown } from '../components/Countdown';
-import { ExperienceBar } from '../components/ExperienceBar';
-import { Profile } from '../components/Profile';
-import styles from '../styles/pages/Home.module.css';
+import styles from '../styles/pages/index.module.scss';
+import { AiFillGithub } from 'react-icons/ai';
 import Head from 'next/head';
-import { GetServerSideProps } from 'next';
-import { ChallengeBox } from '../components/ChallengeBox';
-import { CountdownProvider } from '../contexts/CountdownContext';
-import { ChallengesProvider } from '../contexts/ChallengesContext';
+import { signIn, useSession } from 'next-auth/react';
+import { AuthProvider } from '../contexts/AuthContext';
+import router from 'next/router';
+import { useEffect } from 'react';
 
-interface HomeProps {
-  level: number;
-  currentExperience: number;
-  challengesCompleted: number;
+interface LoginProps {
+  user_name: string;
+  user_image: string;
+  user_email: string;
 }
 
-export default function Home(props: HomeProps) {
+export default function Login(props: LoginProps) {
+  const { data: session } = useSession();
+  
+  useEffect(() => {
+    if (session) {
+      router.push('/home');
+    }
+    
+  }, [session])
+
   return (
-    <ChallengesProvider
-      level={props.level}
-      currentExperience={props.currentExperience}
-      challengesCompleted={props.challengesCompleted}
+    <AuthProvider
+      user_name={props.user_name}
+      user_image={props.user_image}
+      user_email={props.user_email}
     >
-      <div className={styles.container}>
+      <main className={styles.background}>
         <Head>
-          <title>Início | move.it</title>
+          <title>Bem-vindo | move.it</title>
         </Head>
+        <div className={styles.container}>
+          <div className={styles.left}>
+            <img src='/simbolo.svg' alt='Simbolo moveit' />
+          </div>
+          <div className={styles.right}>
+            <img src='/logo-full-white.svg' alt='Logo moveit' />
+            <h2>Bem-vindo</h2>
 
-        <ExperienceBar />
-
-        <CountdownProvider>
-          <section>
-            <div>
-              <Profile />
-              <CompletedChallenges />
-              <Countdown />
-            </div>
-            <div>
-              <ChallengeBox />
-            </div>
-          </section>
-        </CountdownProvider>
-      </div>
-    </ChallengesProvider>
+            <button type='button' onClick={() => signIn('github')}>
+              <AiFillGithub /> Fazer Login com o Github
+            </button>
+          </div>
+        </div>
+      </main>
+    </AuthProvider>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
-  return {
-    props: {
-      level: Number(level),
-      currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted),
-    },
-  };
-};
