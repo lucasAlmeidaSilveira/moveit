@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { useSession } from 'next-auth/react';
-import { createContext, ReactNode, useEffect } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 
 interface AuthContextData {
   user_name: string;
@@ -18,20 +18,27 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  let user_name;
+  let user_image;
+  let user_email;
 
   useEffect(() => {
-    if (session !== undefined) {
+    if (status === 'authenticated') {
+      setIsAuthenticated(true);
       Cookies.set('user_name', session.user.name);
       Cookies.set('user_image', session.user.image);
       Cookies.set('user_email', session.user.email);
-      console.log(user_name, user_image);
     }
   }, [session]);
 
-  const user_name = Cookies.get('user_name');
-  const user_image = Cookies.get('user_image');
-  const user_email = Cookies.get('user_email');
+  if(isAuthenticated) {
+    user_name = Cookies.get('user_name');
+    user_image = Cookies.get('user_image');
+    user_email = Cookies.get('user_email');
+  }
 
   return (
     <AuthContext.Provider
