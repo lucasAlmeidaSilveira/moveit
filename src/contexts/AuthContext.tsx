@@ -1,27 +1,16 @@
 import Cookies from 'js-cookie';
-import {
-  createContext,
-  FormEvent,
-  ReactNode,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, FormEvent, ReactNode, useState } from 'react';
 import router from 'next/router';
+import API from '../services/api';
 
 interface AuthContextData {
-  user: string;
-  setUser: React.Dispatch<React.SetStateAction<string>>;
   userData: UserDataProps;
-  setUserData?: React.Dispatch<React.SetStateAction<UserDataProps>>;
-  handleSignIn: (e: FormEvent) => void;
+  handleSignIn: (e: FormEvent, user: string) => void;
 }
 
 interface AuthProviderProps {
-  user?: string;
-  setUser?: React.Dispatch<React.SetStateAction<string>>;
   userData: UserDataProps;
-  setUserData?: React.Dispatch<React.SetStateAction<UserDataProps>>;
-  handleSignIn: (e: FormEvent) => Promise<void>;
+  handleSignIn: (e: FormEvent, user: string) => Promise<void>;
   children: ReactNode;
 }
 
@@ -33,25 +22,22 @@ interface UserDataProps {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState('');
   const [userData, setUserData] = useState({} as UserDataProps);
+  const [error, setError] = useState('');
 
-  async function handleSignIn(e: FormEvent) {
+  async function handleSignIn(e: FormEvent, user: string) {
     e.preventDefault();
 
-    if (user.trim() === '') {
-      return;
-    }
-    await fetch(`https://api.github.com/users/diego3g`).then(response =>
-      response.json().then(data => {
-        if (data.message === 'Not Found') {
-          return;
-        }
-        setUserData(data);
-        Cookies.set('user', userData.name);
-        Cookies.set('avatar', userData.avatar);
-      }),
-    );
+    await API.get(`/${user}`)
+      .then(response => {
+        Cookies.set('user', response.data.name);
+        Cookies.set('avatar', response.data.avatar_url);
+        setUserData({
+          name: response.data.name,
+          avatar: response.data.avatar_url,
+        });
+      })
+      .catch(error => setError(error));
 
     router.push('/home');
   }
@@ -59,10 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   return (
     <AuthContext.Provider
       value={{
-        user,
-        setUser,
         userData,
-        setUserData,
         handleSignIn,
       }}
     >

@@ -9,7 +9,7 @@ import styles from '../styles/components/Profile.module.scss';
 export function Profile() {
   const { level } = useContext(ChallengesContext);
 
-  const userName = Cookies.get('user')
+  const name = Cookies.get('user')
   const avatar = Cookies.get('avatar')
 
   function signOut(){
@@ -20,10 +20,10 @@ export function Profile() {
     <div className={styles.profileContainer}>
       <img
         src={avatar}
-        alt={userName}
+        alt={name}
       />
       <div>
-        <strong>{userName}</strong>
+        <strong>{name}</strong>
         <p>
           <img src='icons/level.svg' alt='Level' />
           Level {level}

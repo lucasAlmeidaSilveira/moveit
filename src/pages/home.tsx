@@ -20,6 +20,7 @@ interface HomeProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
+  user: string;
   userData: User;
   handleSignIn: (e: FormEvent) => Promise<void>;
 }
