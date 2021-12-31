@@ -48,11 +48,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           return;
         }
         setUserData(data);
+        Cookies.set('user', userData.name);
+        Cookies.set('avatar', userData.avatar);
       }),
     );
-
-    Cookies.set('user', userData.name);
-    Cookies.set('avatar', userData.avatar);
 
     router.push('/home');
   }

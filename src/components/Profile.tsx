@@ -12,8 +12,6 @@ export function Profile() {
   const userName = Cookies.get('user')
   const avatar = Cookies.get('avatar')
 
-  console.log(avatar)
-
   function signOut(){
     router.push('/'); 
   }
