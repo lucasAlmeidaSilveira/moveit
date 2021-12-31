@@ -8,9 +8,10 @@ import styles from '../styles/components/Profile.module.scss';
 
 export function Profile() {
   const { level } = useContext(ChallengesContext);
+  const { userData } = useContext(AuthContext);
 
-  const name = Cookies.get('user')
-  const avatar = Cookies.get('avatar')
+  const name = Cookies.get('user');
+  const avatar = Cookies.get('avatar');
 
   function signOut(){
     router.push('/'); 

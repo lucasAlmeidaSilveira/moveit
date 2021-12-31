@@ -33,8 +33,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         Cookies.set('user', response.data.name);
         Cookies.set('avatar', response.data.avatar_url);
         setUserData({
-          name: response.data.name,
-          avatar: response.data.avatar_url,
+          name: Cookies.get('user'),
+          avatar: Cookies.get('avatar')
         });
       })
       .catch(error => setError(error));
