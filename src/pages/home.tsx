@@ -9,23 +9,24 @@ import { ChallengeBox } from '../components/ChallengeBox';
 import { CountdownProvider } from '../contexts/CountdownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
 import { AuthProvider } from '../contexts/AuthContext';
+import { FormEvent } from 'react';
+
+interface User {
+  name: string;
+  avatar: string;
+}
 
 interface HomeProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
-  user_name: string;
-  user_image: string;
-  user_email: string;
+  userData: User;
+  handleSignIn: (e: FormEvent) => Promise<void>;
 }
 
 export default function Home(props: HomeProps) {
   return (
-    <AuthProvider
-      user_name={props.user_name}
-      user_email={props.user_email}
-      user_image={props.user_image}
-    >
+    <AuthProvider userData={props.userData} handleSignIn={props.handleSignIn}>
       <ChallengesProvider
         level={props.level}
         currentExperience={props.currentExperience}
@@ -61,18 +62,12 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     level,
     currentExperience,
     challengesCompleted,
-    user_name,
-    user_image,
-    user_email,
   } = ctx.req.cookies;
   return {
     props: {
       level: Number(level),
       currentExperience: Number(currentExperience),
       challengesCompleted: Number(challengesCompleted),
-      user_name: String(user_name),
-      user_image: String(user_image),
-      user_email: String(user_email),
     },
   };
 };

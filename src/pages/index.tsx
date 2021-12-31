@@ -1,51 +1,58 @@
 import styles from '../styles/pages/index.module.scss';
-import { AiFillGithub } from 'react-icons/ai';
+import { AiFillGithub, AiOutlineArrowRight } from 'react-icons/ai';
 import Head from 'next/head';
 import { signIn, useSession } from 'next-auth/react';
-import { AuthProvider } from '../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import router from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState, FormEvent, useContext } from 'react';
 
 interface LoginProps {
-  user_name: string;
-  user_image: string;
-  user_email: string;
+  user: string;
+  setUser: React.Dispatch<React.SetStateAction<string>>;
+  userData: User;
+  handleSignIn: (e: FormEvent) => Promise<void>;
 }
 
+interface User {
+  name: string;
+  avatar: string;
+}
+
+// const { avatar_url, name, email } = data;
+
 export default function Login(props: LoginProps) {
-  const { data: session } = useSession();
-  
-  useEffect(() => {
-    if (session) {
-      router.push('/home');
-    }
-    
-  }, [session])
+  const { handleSignIn, setUser, user } = useContext(AuthContext);
 
   return (
-    <AuthProvider
-      user_name={props.user_name}
-      user_image={props.user_image}
-      user_email={props.user_email}
-    >
-      <main className={styles.background}>
-        <Head>
-          <title>Bem-vindo | move.it</title>
-        </Head>
-        <div className={styles.container}>
-          <div className={styles.left}>
-            <img src='/simbolo.svg' alt='Simbolo moveit' />
-          </div>
-          <div className={styles.right}>
-            <img src='/logo-full-white.svg' alt='Logo moveit' />
-            <h2>Bem-vindo</h2>
-
-            <button type='button' onClick={() => signIn('github')}>
-              <AiFillGithub /> Fazer Login com o Github
-            </button>
-          </div>
+    <main className={styles.background}>
+      <Head>
+        <title>Bem-vindo | move.it</title>
+      </Head>
+      <div className={styles.container}>
+        <div className={styles.left}>
+          <img src='/simbolo.svg' alt='Simbolo moveit' />
         </div>
-      </main>
-    </AuthProvider>
+        <div className={styles.right}>
+          <img src='/logo-full-white.svg' alt='Logo moveit' />
+          <h2>Bem-vindo</h2>
+
+          <p>
+            <AiFillGithub /> Faça seu login com seu Github para começar
+          </p>
+
+          <form onSubmit={handleSignIn}>
+            <input
+              type='text'
+              placeholder='Digite seu username'
+              onChange={event => setUser(event.target.value)}
+              value={user}
+            />
+            <button type='submit'>
+              <AiOutlineArrowRight />
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
   );
 }

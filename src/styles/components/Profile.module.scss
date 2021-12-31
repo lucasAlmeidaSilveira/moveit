@@ -26,20 +26,20 @@
     }
   }
 
-  button {
-    margin-left: auto;
-    border: 0;
-    cursor: pointer;
+    button {
+      margin-left: auto;
+      border: 0;
+      cursor: pointer;
 
-    svg {
-      font-size: 1.5rem;
-      color: var(--title);
+      svg {
+        font-size: 1.5rem;
+        color: var(--title);
 
-      transition: filter 0.2s;
+        transition: filter 0.2s;
 
-      &:hover {
-        filter: brightness(1.3);
+        &:hover {
+          filter: brightness(1.3);
+        }
       }
     }
-  }
 }

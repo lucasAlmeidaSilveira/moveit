@@ -1,51 +1,70 @@
 import Cookies from 'js-cookie';
-import { useSession } from 'next-auth/react';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import {
+  createContext,
+  FormEvent,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
+import router from 'next/router';
 
 interface AuthContextData {
-  user_name: string;
-  user_image: string;
-  user_email: string;
+  user: string;
+  setUser: React.Dispatch<React.SetStateAction<string>>;
+  userData: UserDataProps;
+  setUserData?: React.Dispatch<React.SetStateAction<UserDataProps>>;
+  handleSignIn: (e: FormEvent) => void;
 }
 
 interface AuthProviderProps {
+  user?: string;
+  setUser?: React.Dispatch<React.SetStateAction<string>>;
+  userData: UserDataProps;
+  setUserData?: React.Dispatch<React.SetStateAction<UserDataProps>>;
+  handleSignIn: (e: FormEvent) => Promise<void>;
   children: ReactNode;
-  user_name: string;
-  user_image: string;
-  user_email: string;
+}
+
+interface UserDataProps {
+  name: string;
+  avatar: string;
 }
 
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data: session, status } = useSession();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState('');
+  const [userData, setUserData] = useState({} as UserDataProps);
 
-  let user_name;
-  let user_image;
-  let user_email;
+  async function handleSignIn(e: FormEvent) {
+    e.preventDefault();
 
-  useEffect(() => {
-    if (status === 'authenticated') {
-      setIsAuthenticated(true);
-      Cookies.set('user_name', session.user.name);
-      Cookies.set('user_image', session.user.image);
-      Cookies.set('user_email', session.user.email);
+    if (user.trim() === '') {
+      return;
     }
-  }, [session]);
+    await fetch(`https://api.github.com/users/diego3g`).then(response =>
+      response.json().then(data => {
+        if (data.message === 'Not Found') {
+          return;
+        }
+        setUserData(data);
+      }),
+    );
 
-  if(isAuthenticated) {
-    user_name = Cookies.get('user_name');
-    user_image = Cookies.get('user_image');
-    user_email = Cookies.get('user_email');
+    Cookies.set('user', userData.name);
+    Cookies.set('avatar', userData.avatar);
+
+    router.push('/home');
   }
 
   return (
     <AuthContext.Provider
       value={{
-        user_name,
-        user_image,
-        user_email,
+        user,
+        setUser,
+        userData,
+        setUserData,
+        handleSignIn,
       }}
     >
       {children}
