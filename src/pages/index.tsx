@@ -21,7 +21,12 @@ interface User {
 // const { avatar_url, name, email } = data;
 
 export default function Login(props: LoginProps) {
-  const { handleSignIn, setUser, user } = useContext(AuthContext);
+  const { handleSignIn } = useContext(AuthContext);
+  const [value, setValue] = useState('')
+
+  function signIn(e: FormEvent) {
+    handleSignIn(e, value)
+  }
 
   return (
     <main className={styles.background}>
@@ -40,12 +45,12 @@ export default function Login(props: LoginProps) {
             <AiFillGithub /> Faça seu login com seu Github para começar
           </p>
 
-          <form onSubmit={handleSignIn}>
+          <form onSubmit={signIn}>
             <input
               type='text'
               placeholder='Digite seu username'
-              onChange={event => setUser(event.target.value)}
-              value={user}
+              onChange={event => setValue(event.target.value)}
+              value={value}
             />
             <button type='submit'>
               <AiOutlineArrowRight />
